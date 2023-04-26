@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <main>
+        <h2 id="display"></h2>
+        <input id="get-input" type="text">
+        <button id="get-btn">SEND GET</button>
+    </main>
+    <script>
+        let display = document.querySelector('#display');
+
+        let getBtn = document.querySelector('#get-btn');
+        let getInput = document.querySelector('#get-input');
+
+        getBtn.addEventListener('click', function () {
+            console.log('click');
+            console.log(getInput.value)
+
+            display.innerHTML = "Request Sent to <br>" + getInput.value + "<br>";
+            getAjax('GET', getInput.value);
+        });
+
+        function getAjax(varMethod, varLink) {
+            console.log(varMethod);
+            fetch(varLink, {
+                method: varMethod,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('PUT request failed.');
+                    }
+                })
+                .then(data => {
+                    console.log(data);
+                    display.innerHTML = varMethod + "<br>";
+                    display.innerHTML += data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+
+</html>
