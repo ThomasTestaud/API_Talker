@@ -10,22 +10,50 @@
 
 <body>
     <main>
-        <h2 id="display"></h2>
-        <input id="get-input" type="text">
-        <button id="get-btn">SEND GET</button>
+        <h1>REST_API_Talker</h1>
+        <div class="form">
+            <label for="method">Select the method:</label>
+            <br>
+            <input type="radio" id="get-radio" name="method" value="GET">
+            <label for="get-radio">GET</label>
+            <input type="radio" id="put-radio" name="method" value="PUT">
+            <label for="put-radio">PUT</label>
+            <input type="radio" id="delete-radio" name="method" value="DELETE">
+            <label for="delete-radio">DELETE</label>
+            <input type="radio" id="post-radio" name="method" value="POST">
+            <label for="post-radio">POST</label>
+            <br>
+
+            <label for="get-input">Input your request:</label>
+            <br>
+            <input id="get-input" type="text">
+            <br>
+
+            <button id="example-btn">USE EXAMPLE</button>
+            <button id="send-btn">SEND REQUEST</button>
+        </div>
+
+
+        <div id="display"></div>
     </main>
     <script>
         let display = document.querySelector('#display');
-
-        let getBtn = document.querySelector('#get-btn');
+        let getBtn = document.querySelector('#send-btn');
         let getInput = document.querySelector('#get-input');
 
         getBtn.addEventListener('click', function () {
-            console.log('click');
-            console.log(getInput.value)
-
             display.innerHTML = "Request Sent to <br>" + getInput.value + "<br>";
-            getAjax('GET', getInput.value);
+
+            const methodRadios = document.querySelectorAll('input[name="method"]');
+            let selectedMethod;
+            for (const radio of methodRadios) {
+                if (radio.checked) {
+                    selectedMethod = radio.value;
+                    break;
+                }
+            }
+
+            getAjax(selectedMethod, getInput.value);
         });
 
         function getAjax(varMethod, varLink) {
@@ -44,16 +72,49 @@
                     }
                 })
                 .then(data => {
-                    console.log(data);
-                    display.innerHTML = varMethod + "<br>";
-                    display.innerHTML += data;
+                    display.innerHTML = "<p>Got an answer from</p><p>" + getInput.value + "</p>";
+                    display.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
                 })
                 .catch(error => {
                     console.error(error);
                     display.innerHTML = "There has been an error trying to access <br>" + getInput.value + "<br>";
                 });
         }
+
+
+        //EXAMPLE//
+        let exampleBtn = document.querySelector('#example-btn');
+        let radioGet = document.getElementById("get-radio");
+
+        exampleBtn.addEventListener('click', function () {
+            radioGet.checked = true;
+            getInput.value = 'https://skillsapi.thomastestaud.com/index.php?route=api&user=0';
+        });
+
     </script>
+    <style>
+        * {
+            border: 1px solid red;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            font-size: 20px;
+            font-family: sans-serif;
+        }
+
+        main {
+            max-width: 1080px;
+            margin: auto;
+            padding: 1rem;
+        }
+
+        #get-input {
+            width: 100%;
+        }
+    </style>
 </body>
 
 </html>
