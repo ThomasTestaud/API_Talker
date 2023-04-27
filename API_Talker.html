@@ -14,23 +14,34 @@
         <div class="form">
             <label for="method">Select the method:</label>
             <br>
-            <input type="radio" id="get-radio" name="method" value="GET">
-            <label for="get-radio">GET</label>
-            <input type="radio" id="put-radio" name="method" value="PUT">
-            <label for="put-radio">PUT</label>
-            <input type="radio" id="delete-radio" name="method" value="DELETE">
-            <label for="delete-radio">DELETE</label>
-            <input type="radio" id="post-radio" name="method" value="POST">
-            <label for="post-radio">POST</label>
+            <div class="center">
+                <div>
+                    <input type="radio" id="get-radio" name="method" value="GET">
+                    <label for="get-radio">GET</label>
+                </div>
+                <div>
+                    <input type="radio" id="put-radio" name="method" value="PUT">
+                    <label for="put-radio">PUT</label>
+                </div>
+                <div>
+                    <input type="radio" id="delete-radio" name="method" value="DELETE">
+                    <label for="delete-radio">DELETE</label>
+                </div>
+                <div>
+                    <input type="radio" id="post-radio" name="method" value="POST">
+                    <label for="post-radio">POST</label>
+                </div>
+            </div>
             <br>
 
             <label for="get-input">Input your request:</label>
             <br>
             <input id="get-input" type="text">
             <br>
-
-            <button id="example-btn">USE EXAMPLE</button>
-            <button id="send-btn">SEND REQUEST</button>
+            <div class="center">
+                <button id="example-btn">USE EXAMPLE</button>
+                <button id="send-btn">SEND REQUEST</button>
+            </div>
         </div>
 
 
@@ -85,16 +96,17 @@
         //EXAMPLE//
         let exampleBtn = document.querySelector('#example-btn');
         let radioGet = document.getElementById("get-radio");
+        const examples = ['https://skillsapi.thomastestaud.com/index.php?route=api&user=0', 'https://api.github.com/users/thomastestaud'];
 
         exampleBtn.addEventListener('click', function () {
             radioGet.checked = true;
-            getInput.value = 'https://skillsapi.thomastestaud.com/index.php?route=api&user=0';
+            getInput.value = examples[Math.round(Math.random())];
         });
 
     </script>
     <style>
         * {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             box-sizing: border-box;
         }
 
@@ -103,16 +115,46 @@
             margin: 0;
             font-size: 20px;
             font-family: sans-serif;
+            background-color: #edf2f4;
         }
 
         main {
-            max-width: 1080px;
+            max-width: 950px;
             margin: auto;
             padding: 1rem;
         }
 
+        h1 {
+            text-align: center;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .center>* {
+            margin: 1rem;
+        }
+
         #get-input {
             width: 100%;
+            margin: 1rem 0;
+        }
+
+        button {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        pre {
+            min-height: 200px;
+            border: 1px solid grey;
+            border-radius: 5px;
+            background-color: white;
+            overflow: auto;
+            padding: 1rem;
+            box-shadow: rgba(0, 0, 0, 0.16) 2px 3px 6px inset;
         }
     </style>
 </body>
