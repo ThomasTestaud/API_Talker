@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>REST_API_Talker</title>
 </head>
 
 <body>
@@ -38,10 +38,20 @@
             <br>
             <input id="get-input" type="text">
             <br>
+
+            <div class="center">
+                <input type="checkbox" id="json-body" name="body" checked>
+                <label for="body">Add body to the request</label>
+            </div>
+            <textarea class="none" id="body-input" type="text"></textarea>
+
             <div class="center">
                 <button id="example-btn">USE EXAMPLE</button>
                 <button id="send-btn">SEND REQUEST</button>
             </div>
+
+
+
         </div>
 
 
@@ -52,9 +62,71 @@
         let getBtn = document.querySelector('#send-btn');
         let getInput = document.querySelector('#get-input');
 
+        //Defining the AJAX function
+        function getAjax(varMethod, varLink, body = "") {
+            console.log(varMethod);
+
+            if (body === "") {
+                fetch(varLink, {
+                    method: varMethod,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('PUT request failed.');
+                        }
+                    })
+                    .then(data => {
+                        display.innerHTML = "<p>Got an answer from</p><p>" + getInput.value + "</p>";
+                        display.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        display.innerHTML = "There has been an error trying to access <br>" + getInput.value + "<br>";
+                    });
+            } else {
+                fetch(varLink, {
+                    method: varMethod,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ body })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('PUT request failed.');
+                        }
+                    })
+                    .then(data => {
+                        display.innerHTML = "<p>Got an answer from</p><p>" + getInput.value + "</p>";
+                        display.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        display.innerHTML = "There has been an error trying to access <br>" + getInput.value + "<br>";
+                    });
+            }
+        }
+
+        //Displaying body
+        let bodyInput = document.querySelector('#body-input');
+        let jsonBody = document.querySelector('#json-body');
+        jsonBody.checked = false;
+        jsonBody.addEventListener('click', function () {
+            bodyInput.classList.toggle('none');
+        })
+
+        //Sending the Ajax function
         getBtn.addEventListener('click', function () {
             display.innerHTML = "Request Sent to <br>" + getInput.value + "<br>";
 
+            //Fetching what header has been checked
             const methodRadios = document.querySelectorAll('input[name="method"]');
             let selectedMethod;
             for (const radio of methodRadios) {
@@ -64,34 +136,13 @@
                 }
             }
 
-            getAjax(selectedMethod, getInput.value);
+            //Fetching the body
+            bodyContent = bodyInput.value;
+            console.log(bodyContent);
+
+            //Executing the request
+            getAjax(selectedMethod, getInput.value, bodyContent);
         });
-
-        function getAjax(varMethod, varLink) {
-            console.log(varMethod);
-            fetch(varLink, {
-                method: varMethod,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error('PUT request failed.');
-                    }
-                })
-                .then(data => {
-                    display.innerHTML = "<p>Got an answer from</p><p>" + getInput.value + "</p>";
-                    display.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-                })
-                .catch(error => {
-                    console.error(error);
-                    display.innerHTML = "There has been an error trying to access <br>" + getInput.value + "<br>";
-                });
-        }
-
 
         //EXAMPLE//
         let exampleBtn = document.querySelector('#example-btn');
@@ -142,6 +193,10 @@
             margin: 1rem 0;
         }
 
+        textarea {
+            width: 100%;
+        }
+
         button {
             padding: 1rem;
             border-radius: 0.5rem;
@@ -155,6 +210,10 @@
             overflow: auto;
             padding: 1rem;
             box-shadow: rgba(0, 0, 0, 0.16) 2px 3px 6px inset;
+        }
+
+        .none {
+            display: none;
         }
     </style>
 </body>
